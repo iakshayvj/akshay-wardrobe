@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Akshay's Wardrobe</title>
+<style>
+:root { --bg:#faf9f7; --ink:#1c1b1a; --mut:#6f6a63; --line:#e7e2da; }
+* { box-sizing:border-box; margin:0; }
+body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif; background:var(--bg); color:var(--ink); padding:32px 20px 80px; }
+.wrap { max-width:1180px; margin:0 auto; }
+h1 { font-size:28px; letter-spacing:-.02em; }
+.sub { color:var(--mut); margin-top:6px; font-size:14px; }
+nav { margin:22px 0 8px; display:flex; gap:8px; flex-wrap:wrap; }
+nav a { font-size:13px; color:var(--ink); text-decoration:none; border:1px solid var(--line); padding:6px 12px; border-radius:999px; background:#fff; }
+.filters { margin:14px 0 4px; }
+.frow { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; align-items:center; }
+.flabel { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--mut); width:52px; }
+.chip { font-size:13px; border:1px solid var(--line); background:#fff; border-radius:999px; padding:6px 12px; cursor:pointer; color:var(--ink); }
+.chip .cc { color:var(--mut); font-size:11px; }
+.chip.on { background:var(--ink); color:#fff; border-color:var(--ink); }
+.chip.on .cc { color:#cfc9c0; }
+h2 { font-size:19px; margin:34px 0 14px; }
+h2 .count { color:var(--mut); font-weight:400; font-size:14px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:12px; overflow:hidden; cursor:pointer; }
+.card img { width:100%; aspect-ratio:3/4; object-fit:cover; display:block; background:#f1efec; }
+.card.sel { outline:2px solid var(--ink); outline-offset:-2px; }
+.ph { aspect-ratio:3/4; display:flex; align-items:center; justify-content:center; color:var(--mut); font-size:13px; background:#f1efec; text-align:center; padding:12px; }
+.meta { padding:12px 14px 14px; }
+.brand { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--mut); }
+.nm { font-size:14px; font-weight:600; margin-top:3px; }
+.det { font-size:13px; color:var(--mut); margin-top:3px; }
+.ord { font-size:12px; color:var(--mut); margin-top:5px; }
+.note { font-size:12px; color:#a05a00; margin-top:6px; }
+.ucard { background:#fff; border:1px dashed var(--line); border-radius:12px; padding:14px; }
+.ugrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; }
+ul.leg { columns:2; font-size:13px; color:var(--mut); line-height:1.9; padding-left:18px; }
+@media (max-width:640px) { ul.leg { columns:1; } }
+.builder { background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px; }
+.brow { display:flex; gap:8px; flex-wrap:wrap; margin:12px 0; }
+.bbtn { font-size:14px; border:1px solid var(--ink); background:var(--ink); color:#fff; border-radius:999px; padding:8px 16px; cursor:pointer; }
+.bbtn.ghost { background:#fff; color:var(--ink); }
+#tray { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; margin-top:6px; }
+.tcard { border:1px solid var(--line); border-radius:10px; overflow:hidden; background:#fff; position:relative; }
+.tcard img { width:100%; aspect-ratio:3/4; object-fit:cover; display:block; background:#f1efec; }
+.tcard .tph { aspect-ratio:3/4; display:flex; align-items:center; justify-content:center; color:var(--mut); font-size:12px; background:#f1efec; text-align:center; padding:8px; }
+.tcard .tm { padding:8px 10px; font-size:12px; }
+.tcard .tm b { display:block; font-size:12px; }
+.tcard .tx { position:absolute; top:6px; right:6px; width:22px; height:22px; border-radius:50%; background:rgba(28,27,26,.85); color:#fff; border:0; cursor:pointer; font-size:12px; line-height:1; }
+.trayempty { color:var(--mut); font-size:13px; padding:18px 4px; }
+.hint { font-size:13px; color:var(--mut); margin-top:4px; }
+.fits { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; margin-top:12px; }
+.fit { background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px; }
+.fname { font-weight:600; font-size:14px; }
+.fitems { font-size:13px; color:var(--ink); margin-top:6px; line-height:1.5; }
+.fwhy { font-size:12px; color:var(--mut); margin-top:6px; }
+</style></head><body><div class="wrap">
+<h1>Akshay's Wardrobe</h1>
+<div class="sub">86 items catalogued from order history · Updated 13 Sep 2026 · Photos are the retailers' own product shots</div>
+<nav><a href="#tops">Tops</a><a href="#bottoms">Bottoms</a><a href="#innerwear">Innerwear</a><a href="#outerwear">Outerwear & Knitwear</a><a href="#shoes">Shoes</a><a href="#accessories">Accessories</a><a href="#builder">Outfit builder</a><a href="#verify">Needs verification</a><a href="#legacy">2022-23 archive</a></nav>
+<div class="filters">
+ <div class="frow"><span class="flabel">Brand</span><button class="chip on" data-fb="all">All brands</button><button class="chip" data-fb="Adidas">Adidas <span class="cc">1</span></button><button class="chip" data-fb="Birkenstock">Birkenstock <span class="cc">1</span></button><button class="chip" data-fb="Happenstance">Happenstance <span class="cc">1</span></button><button class="chip" data-fb="March Tee">March Tee <span class="cc">34</span></button><button class="chip" data-fb="Monks of Method">Monks of Method <span class="cc">1</span></button><button class="chip" data-fb="New Balance">New Balance <span class="cc">2</span></button><button class="chip" data-fb="Theater">Theater <span class="cc">1</span></button><button class="chip" data-fb="Uniqlo">Uniqlo <span class="cc">34</span></button><button class="chip" data-fb="Wellbi">Wellbi <span class="cc">11</span></button></div>
+ <div class="frow"><span class="flabel">Type</span><button class="chip on" data-fc="all">All types</button><button class="chip" data-fc="tops">Tops</button><button class="chip" data-fc="bottoms">Bottoms</button><button class="chip" data-fc="innerwear">Innerwear</button><button class="chip" data-fc="outerwear">Outerwear & Knitwear</button><button class="chip" data-fc="shoes">Shoes</button><button class="chip" data-fc="accessories">Accessories</button></div>
+</div>
+<h2 id="builder">Outfit builder</h2>
+<div class="builder">
+ <div class="hint">Tap any item below to add it to the tray. Then complete the outfit from what you own, or start from a suggestion.</div>
+ <div class="brow">
+  <button class="bbtn" onclick="completeOutfit()">Complete my outfit</button>
+  <button class="bbtn ghost" onclick="surpriseOutfit()">Suggest an outfit</button>
+  <button class="bbtn ghost" onclick="clearTray()">Clear</button>
+ </div>
+ <div id="tray"><div class="trayempty">Tray is empty. Pick an item from the catalog, or hit Suggest.</div></div>
+</div>
+<h2>Curated outfits <span class="count">built from your clothes</span></h2>
+<div class="fits"><div class="fit"><div class="fname">Everyday neutral</div><div class="fitems">March Heavy Crew Pure White + Uniqlo Wide Fit Chino brown + Adidas NY 90 white</div><div class="fwhy">Clean base, brown grounds it. Works almost anywhere.</div></div><div class="fit"><div class="fname">Earth tones</div><div class="fitems">Wellbi Oversized Tee dark brown + Uniqlo Regular Chino olive + NB 574 black</div><div class="fwhy">Two earth shades + black. Your core palette.</div></div><div class="fit"><div class="fname">Linen day</div><div class="fitems">Uniqlo Premium Linen Shirt off white + Uniqlo Linen Blend Easy Pants navy + Birkenstock Mayari</div><div class="fwhy">Warm-weather uniform. Relaxed but put together.</div></div><div class="fit"><div class="fname">Layered evening</div><div class="fitems">Uniqlo Souffle Half-Zip beige over Waffle Henley dark green + Uniqlo Wide Straight Jeans blue + NB 1080v13 black</div><div class="fwhy">Texture on texture; beige softens the green.</div></div><div class="fit"><div class="fname">Smart casual</div><div class="fitems">Uniqlo Oxford Shirt blue + Uniqlo Wide Tapered Pants brown + Theater Combat mocha</div><div class="fwhy">Shirt + structured pant. The boots keep it yours.</div></div><div class="fit"><div class="fname">One statement</div><div class="fitems">March Heavy Crew Bloom + Uniqlo Geared Pants olive + Adidas NY 90 white</div><div class="fwhy">One loud piece, everything else quiet.</div></div></div>
+<h2 id="tops">Tops <span class="count">47</span></h2><div class="grid"><div class="card" data-brand="Wellbi" data-cat="tops" data-name="Bamboo Active Performance T-Shirt" data-color="Frost (light blue)"><img loading="lazy" src="63-wellbi-performance-frost.png" alt="Wellbi Bamboo Active Performance T-Shirt"><div class="meta"><div class="brand">Wellbi</div>
+    <div class="nm">Bamboo Active Performance T-Shirt</div>
+    <div class="det">Frost (light blue) · M</div>
+    <div class="ord">Feb 2026 · Wellbi #56146</div></div></div><div class="card" data-brand="Wellbi" data-cat="tops" data-name="Bamboo Active Performance T-Shirt" data-color="Red"><img loading="lazy" src="64-wellbi-performance-red.png" alt="Wellbi Bamboo Active Performance T-Shirt"><div class="meta"><div class="brand">Wellbi</div>
+    <div class="nm">Bamboo Active Performance T-Shirt</div>
+    <div class="det">Red · M</div>
+    <div class="ord">Aug 2026 · Wellbi #73625</div></div></div><div class="card" data-brand="Wellbi" data-cat="tops" data-name="Bamboo Active Performance T-Shirt" data-color="Dark Blue"><img loading="lazy" src="62-wellbi-performance-darkblue.png" alt="Wellbi Bamboo Active Performance T-Shirt"><div class="meta"><div class="brand">Wellbi</div>
+    <div class="nm">Bamboo Active Performance T-Shirt</div>
+    <div class="det">Dark Blue · M</div>
+    <div class="ord">Aug 2026 · Wellbi #73625</div></div></div><div class="card" data-brand="Wellbi" data-cat="tops" data-name="Bamboo Heavy Crew Neck T-Shirt" data-color="White"><img loading="lazy" src="58-wellbi-heavycrew-white.png" alt="Wellbi Bamboo Heavy Crew Neck T-Shirt"><div class="meta"><div class="brand">Wellbi</div>
+    <div class="nm">Bamboo Heavy Crew Neck T-Shirt</div>
+    <div class="det">White · L</div>
+    <div class="ord">Aug 2026 · Wellbi #73625 (exchanged M to L)</div></div></div><div class="card" data-brand="Wellbi" data-cat="tops" data-name="Bamboo Core Oversized T-Shirt" data-color="Dark Brown"><img loading="lazy" src="60-wellbi-oversized-darkbrown.jpg" alt="Wellbi Bamboo Core Oversized T-Shirt"><div class="meta"><div class="brand">Wellbi</div>
+    <div class="nm">Bamboo Core Oversized T-Shirt</div>
+    <div class="det">Dark Brown · M</div>
+    <div class="ord">Aug 2026 · Wellbi #73625</div></div></div><div class="card" data-brand="Wellbi" data-cat="tops" data-name="Bamboo Core Oversized T-Shirt" data-color="Black"><img loading="lazy" src="59-wellbi-oversized-black.jpg" alt="Wellbi Bamboo Core Oversized T-Shirt"><div class="meta"><div class="brand">Wellbi</div>
+    <div class="nm">Bamboo Core Oversized T-Shirt</div>
+    <div class="det">Black · M</div>
+    <div class="ord">Aug 2026 · Wellbi #73625</div></div></div><div class="card" data-brand="Wellbi" data-cat="tops" data-name="Bamboo Core Oversized T-Shirt" data-color="Pinecrest (deep green)"><img loading="lazy" src="61-wellbi-oversized-deepgreen.png" alt="Wellbi Bamboo Core Oversized T-Shirt"><div class="meta"><div class="brand">Wellbi</div>
+    <div class="nm">Bamboo Core Oversized T-Shirt</div>
+    <div class="det">Pinecrest (deep green) · M</div>
+    <div class="ord">Feb 2026 · Wellbi #56146</div></div></div><div class="card" data-brand="Wellbi" data-cat="tops" data-name="Bamboo Core Polo" data-color="Onyx (black)"><img loading="lazy" src="65-wellbi-polo-black.jpg" alt="Wellbi Bamboo Core Polo"><div class="meta"><div class="brand">Wellbi</div>
+    <div class="nm">Bamboo Core Polo</div>
+    <div class="det">Onyx (black) · M</div>
+    <div class="ord">Feb 2026 · Wellbi #56146</div></div></div><div class="card" data-brand="Wellbi" data-cat="tops" data-name="Bamboo Core Polo" data-color="Mulberry"><img loading="lazy" src="66-wellbi-polo-maroon.jpg" alt="Wellbi Bamboo Core Polo"><div class="meta"><div class="brand">Wellbi</div>
+    <div class="nm">Bamboo Core Polo</div>
+    <div class="det">Mulberry · M</div>
+    <div class="ord">Feb 2026 · Wellbi #56146</div><div class="note">Mulberry is discontinued; photo shows the same polo in Maroon</div></div></div><div class="card" data-brand="Uniqlo" data-cat="tops" data-name="Waffle Henley Neck Long Sleeve T-Shirt" data-color="Dark Green"><img loading="lazy" src="38-uniqlo-henley-darkgreen.jpg" alt="Uniqlo Waffle Henley Neck Long Sleeve T-Shirt"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Waffle Henley Neck Long Sleeve T-Shirt</div>
+    <div class="det">Dark Green · M</div>
+    <div class="ord">Oct 2024 · Uniqlo</div><div class="note">Photo is the closest archived colorway</div></div></div><div class="card" data-brand="Uniqlo" data-cat="tops" data-name="Waffle Crew Neck Long Sleeve T-Shirt" data-color="Natural"><img loading="lazy" src="52-uniqlo-wafflecrew-natural.jpg" alt="Uniqlo Waffle Crew Neck Long Sleeve T-Shirt"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Waffle Crew Neck Long Sleeve T-Shirt</div>
+    <div class="det">Natural · M</div>
+    <div class="ord">Oct 2024 · Uniqlo</div></div></div><div class="card" data-brand="Uniqlo" data-cat="tops" data-name="Dry Pique Short Sleeve Polo Shirt" data-color="Navy"><img loading="lazy" src="6-ig-drypique.jpg" alt="Uniqlo Dry Pique Short Sleeve Polo Shirt"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Dry Pique Short Sleeve Polo Shirt</div>
+    <div class="det">Navy · M</div>
+    <div class="ord">Oct 2024 · Uniqlo</div><div class="note">Photo is the reference you sent (Uniqlo&#x27;s campaign shot) - it shows the striped variant of this polo</div></div></div><div class="card" data-brand="Uniqlo" data-cat="tops" data-name="Soft Brushed Crew Neck Long Sleeve T-Shirt" data-color="Dark Brown"><img loading="lazy" src="47-uniqlo-softbrushed-darkbrown.jpg" alt="Uniqlo Soft Brushed Crew Neck Long Sleeve T-Shirt"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Soft Brushed Crew Neck Long Sleeve T-Shirt</div>
+    <div class="det">Dark Brown · M</div>
+    <div class="ord">Oct 2024 · Uniqlo</div></div></div><div class="card" data-brand="Uniqlo" data-cat="tops" data-name="Soft Knitted Fleece Crew Neck T" data-color="Wine"><img loading="lazy" src="35-uniqlo-fleece-wine.jpg" alt="Uniqlo Soft Knitted Fleece Crew Neck T"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Soft Knitted Fleece Crew Neck T</div>
+    <div class="det">Wine · M</div>
+    <div class="ord">Apr 2026 · Uniqlo</div></div></div><div class="card" data-brand="Uniqlo" data-cat="tops" data-name="Crew Neck Long Sleeve Sweater" data-color="Natural"><img loading="lazy" src="50-uniqlo-sweater-natural.jpg" alt="Uniqlo Crew Neck Long Sleeve Sweater"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Crew Neck Long Sleeve Sweater</div>
+    <div class="det">Natural · M</div>
+    <div class="ord">Apr 2026 · Uniqlo</div></div></div><div class="card" data-brand="Uniqlo" data-cat="tops" data-name="Souffle Yarn Half-Zip Sweater" data-color="Beige"><img loading="lazy" src="48-uniqlo-souffle-beige.jpg" alt="Uniqlo Souffle Yarn Half-Zip Sweater"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Souffle Yarn Half-Zip Sweater</div>
+    <div class="det">Beige · M</div>
+    <div class="ord">Apr 2026 · Uniqlo</div></div></div><div class="card" data-brand="Uniqlo" data-cat="tops" data-name="Washable Knitted Shirt Short Sleeve" data-color="White"><img loading="lazy" src="53-uniqlo-washableshirt-01.jpg" alt="Uniqlo Washable Knitted Shirt Short Sleeve"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Washable Knitted Shirt Short Sleeve</div>
+    <div class="det">White · Not on receipt</div>
+    <div class="ord">Apr 2026 · Uniqlo in-store · Orion Mall, Bengaluru</div><div class="note">Color confirmed by you. Size not on e-receipt</div></div></div><div class="card" data-brand="Uniqlo" data-cat="tops" data-name="Oxford Long Sleeve Shirt x3" data-color="Blue x2 (64, 66) + grey"><img loading="lazy" src="44-uniqlo-oxford-64.jpg" alt="Uniqlo Oxford Long Sleeve Shirt x3"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Oxford Long Sleeve Shirt x3</div>
+    <div class="det">Blue x2 (64, 66) + grey · Not on receipt</div>
+    <div class="ord">Apr 2026 · Uniqlo in-store · Orion Mall, Bengaluru</div><div class="note">You confirmed: two blue (colorways 64 and 66) + one grey. Photo shows 64; 66 has no official photo on the current site. Size not on e-receipt</div></div></div><div class="card" data-brand="Uniqlo" data-cat="tops" data-name="Jersey Over Shirt" data-color="Brown"><img loading="lazy" src="1-uniqlo-overshirt-32.jpg" alt="Uniqlo Jersey Over Shirt"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Jersey Over Shirt</div>
+    <div class="det">Brown · Not on receipt</div>
+    <div class="ord">Apr 2026 · Uniqlo in-store · Orion Mall, Bengaluru</div><div class="note">Product page and color (32) pinned from the link you sent. Size not on e-receipt</div></div></div><div class="card" data-brand="Uniqlo" data-cat="tops" data-name="Premium Linen Shirt Long Sleeve" data-color="Brown"><img loading="lazy" src="2-uniqlo-linen-brown.jpg" alt="Uniqlo Premium Linen Shirt Long Sleeve"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Premium Linen Shirt Long Sleeve</div>
+    <div class="det">Brown · M</div>
+    <div class="ord">Apr 2026 · Uniqlo online · 4 Apr 2026</div><div class="note">Colorway 37 photo pinned from the link you sent</div></div></div><div class="card" data-brand="Uniqlo" data-cat="tops" data-name="Premium Linen Shirt Long Sleeve" data-color="Blue"><img loading="lazy" src="2-uniqlo-linen-blue.jpg" alt="Uniqlo Premium Linen Shirt Long Sleeve"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Premium Linen Shirt Long Sleeve</div>
+    <div class="det">Blue · M</div>
+    <div class="ord">Apr 2026 · Uniqlo online · 4 Apr 2026</div></div></div><div class="card" data-brand="Uniqlo" data-cat="tops" data-name="Premium Linen Shirt Long Sleeve" data-color="Dark Brown"><img loading="lazy" src="3-uniqlo-linen-darkbrown.jpg" alt="Uniqlo Premium Linen Shirt Long Sleeve"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Premium Linen Shirt Long Sleeve</div>
+    <div class="det">Dark Brown · M</div>
+    <div class="ord">Apr 2026 · Uniqlo online · 4 Apr 2026</div><div class="note">Colorway 38 photo pinned from the link you sent</div></div></div><div class="card" data-brand="Uniqlo" data-cat="tops" data-name="Premium Linen Shirt Long Sleeve" data-color="Off White"><img loading="lazy" src="9-uniqlo-linen-offwhite.jpg" alt="Uniqlo Premium Linen Shirt Long Sleeve"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Premium Linen Shirt Long Sleeve</div>
+    <div class="det">Off White · M</div>
+    <div class="ord">Apr 2026 · Uniqlo online · 4 Apr 2026</div><div class="note">Exact official photo recovered from Uniqlo&#x27;s archived India product page (Wayback, colorway 01)</div></div></div><div class="card" data-brand="Uniqlo" data-cat="tops" data-name="Premium Linen Stand Collar Shirt Long Sleeve (Stripe)" data-color="Beige"><img loading="lazy" src="4-uniqlo-linen-standcollar-54.jpg" alt="Uniqlo Premium Linen Stand Collar Shirt Long Sleeve (Stripe)"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Premium Linen Stand Collar Shirt Long Sleeve (Stripe)</div>
+    <div class="det">Beige · M</div>
+    <div class="ord">Apr 2026 · Uniqlo online · 4 Apr 2026</div><div class="note">Photo shows colorway 54 from the link you sent</div></div></div><div class="card" data-brand="Uniqlo" data-cat="tops" data-name="Boxy Shirt Short Sleeve" data-color="Natural"><img loading="lazy" src="5-uniqlo-boxyshirt-30.jpg" alt="Uniqlo Boxy Shirt Short Sleeve"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Boxy Shirt Short Sleeve</div>
+    <div class="det">Natural · S</div>
+    <div class="ord">Apr 2026 · Uniqlo online · 4 Apr 2026</div><div class="note">Size S per your order. Photo from the link you sent (colorway 30)</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Classic Crew" data-color="Heather Grey"><img loading="lazy" src="6-march-crew-heathergrey.jpg" alt="March Tee Classic Crew"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Classic Crew</div>
+    <div class="det">Heather Grey · M</div>
+    <div class="ord">Mar 2026 · March Tee #LW7GQL</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Knit Crew" data-color="Moss Green"><img loading="lazy" src="23-march-knitcrew-moss.jpg" alt="March Tee Knit Crew"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Knit Crew</div>
+    <div class="det">Moss Green · S</div>
+    <div class="ord">Mar 2026 · March Tee #LW7GQL</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Knit Crew" data-color="Heather Grey"><img loading="lazy" src="22-march-knitcrew-heathergrey.jpg" alt="March Tee Knit Crew"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Knit Crew</div>
+    <div class="det">Heather Grey · S</div>
+    <div class="ord">Mar 2026 · March Tee #LW7GQL</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Classic Crew" data-color="Oxford Blue"><img loading="lazy" src="7-march-crew-oxfordblue.jpg" alt="March Tee Classic Crew"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Classic Crew</div>
+    <div class="det">Oxford Blue · M</div>
+    <div class="ord">Mar 2026 · March Tee #LW7GQL</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Classic Crew" data-color="Caramel Brown"><img loading="lazy" src="5-march-crew-caramel.jpg" alt="March Tee Classic Crew"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Classic Crew</div>
+    <div class="det">Caramel Brown · M</div>
+    <div class="ord">Mar 2026 · March Tee #LW7GQL</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Classic LS" data-color="Denim Blue"><img loading="lazy" src="3-march-classicls-denimblue.jpg" alt="March Tee Classic LS"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Classic LS</div>
+    <div class="det">Denim Blue · M</div>
+    <div class="ord">Mar 2026 · March Tee #LW7GQL</div><div class="note">Photo shows the closest archived colorway (Light Denim)</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Heavy Crew" data-color="Bloom"><img loading="lazy" src="20-march-heavy-bloom.jpg" alt="March Tee Heavy Crew"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Heavy Crew</div>
+    <div class="det">Bloom · M</div>
+    <div class="ord">Mar 2026 · March Tee #LW7GQL</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Heavy Crew" data-color="Pure White"><img loading="lazy" src="21-march-heavy-white.jpg" alt="March Tee Heavy Crew"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Heavy Crew</div>
+    <div class="det">Pure White · M</div>
+    <div class="ord">Mar 2026 · March Tee #LW7GQL</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Polo LS" data-color="Theory Olive"><img loading="lazy" src="26-march-polols.jpg" alt="March Tee Polo LS"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Polo LS</div>
+    <div class="det">Theory Olive · M</div>
+    <div class="ord">May 2026 · March Tee #AVY68Q</div><div class="note">Official photo shows the same Polo LS in Classic Black; Theory Olive is discontinued</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Hammo Lite" data-color="Black Stripes"><img loading="lazy" src="10-march-hammolite-blackstripes.jpg" alt="March Tee Hammo Lite"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Hammo Lite</div>
+    <div class="det">Black Stripes · M</div>
+    <div class="ord">May 2026 · March Tee #AVY68Q</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Hammo Lite" data-color="Pirate Navy"><img loading="lazy" src="13-march-hammolite-piratenavy.jpg" alt="March Tee Hammo Lite"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Hammo Lite</div>
+    <div class="det">Pirate Navy · M</div>
+    <div class="ord">May 2026 · March Tee #AVY68Q</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Hammo Lite" data-color="Carbon"><img loading="lazy" src="12-march-hammolite-carbon.jpg" alt="March Tee Hammo Lite"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Hammo Lite</div>
+    <div class="det">Carbon · M</div>
+    <div class="ord">Mar 2025 · March Tee #MQVE9E</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Knit Polo" data-color="Olive Green"><img loading="lazy" src="24-march-knitpolo-olive.jpg" alt="March Tee Knit Polo"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Knit Polo</div>
+    <div class="det">Olive Green · M</div>
+    <div class="ord">Mar 2025 · March Tee #MQVE9E</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Hammo Lite" data-color="Rust"><img loading="lazy" src="14-march-hammolite-rust.jpg" alt="March Tee Hammo Lite"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Hammo Lite</div>
+    <div class="det">Rust · M</div>
+    <div class="ord">Mar 2025 · March Tee #MQVE9E</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Hammo Lite" data-color="Bone"><img loading="lazy" src="11-march-hammolite-bone.jpg" alt="March Tee Hammo Lite"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Hammo Lite</div>
+    <div class="det">Bone · M</div>
+    <div class="ord">Mar 2025 · March Tee #MQVE9E</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Supima Polo" data-color="Sea Blue"><div class="ph">No confident photo</div><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Supima Polo</div>
+    <div class="det">Sea Blue · L</div>
+    <div class="ord">Mar 2024 · March Tee #V9B3ZX</div><div class="note">2024 colorway discontinued; no official photo found</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Supima Polo" data-color="Sergeant Maroon"><img loading="lazy" src="25-march-polo-maroon.jpg" alt="March Tee Supima Polo"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Supima Polo</div>
+    <div class="det">Sergeant Maroon · L</div>
+    <div class="ord">Mar 2024 · March Tee #V9B3ZX</div><div class="note">Photo shows March&#x27;s current polo in Sergeant Maroon</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Unitbasic" data-color="Olive"><div class="ph">No confident photo</div><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Unitbasic</div>
+    <div class="det">Olive · L</div>
+    <div class="ord">Mar 2024 · March Tee #V9B3ZX</div><div class="note">Uni-T line discontinued; no official photo found</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Unitbasic" data-color="Peach"><div class="ph">No confident photo</div><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Unitbasic</div>
+    <div class="det">Peach · L</div>
+    <div class="ord">Mar 2024 · March Tee #V9B3ZX</div><div class="note">Uni-T line discontinued; no official photo found</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Classic Crew" data-color="Sergeant Maroon"><img loading="lazy" src="8-march-crew-sergeantmaroon.jpg" alt="March Tee Classic Crew"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Classic Crew</div>
+    <div class="det">Sergeant Maroon · L</div>
+    <div class="ord">Mar 2024 · March Tee #V9B3ZX</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Classic Crew" data-color="Classic Black"><img loading="lazy" src="4-march-crew-black.jpg" alt="March Tee Classic Crew"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Classic Crew</div>
+    <div class="det">Classic Black · L</div>
+    <div class="ord">Mar 2024 · March Tee #V9B3ZX</div></div></div><div class="card" data-brand="March Tee" data-cat="tops" data-name="Unithd" data-color="Navy Stripes"><div class="ph">No confident photo</div><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Unithd</div>
+    <div class="det">Navy Stripes · M</div>
+    <div class="ord">Mar 2024 · March Tee #E7M98E</div><div class="note">Only item kept from #E7M98E (the rest was returned or cancelled); line discontinued, no official photo found</div></div></div></div><h2 id="bottoms">Bottoms <span class="count">21</span></h2><div class="grid"><div class="card" data-brand="Uniqlo" data-cat="bottoms" data-name="Wide Fit Chino Pants" data-color="Brown"><img loading="lazy" src="33-uniqlo-chino-brown.jpg" alt="Uniqlo Wide Fit Chino Pants"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Wide Fit Chino Pants</div>
+    <div class="det">Brown · 79cm</div>
+    <div class="ord">Jun 2025 · Uniqlo</div></div></div><div class="card" data-brand="Uniqlo" data-cat="bottoms" data-name="Wide Fit Chino Pants" data-color="Black"><img loading="lazy" src="32-uniqlo-chino-black.jpg" alt="Uniqlo Wide Fit Chino Pants"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Wide Fit Chino Pants</div>
+    <div class="det">Black · 79cm</div>
+    <div class="ord">Jun 2025 · Uniqlo</div></div></div><div class="card" data-brand="Uniqlo" data-cat="bottoms" data-name="Regular Chino Pants" data-color="Olive"><img loading="lazy" src="46-uniqlo-regchino-olive.jpg" alt="Uniqlo Regular Chino Pants"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Regular Chino Pants</div>
+    <div class="det">Olive · 79cm, hemmed to 70cm</div>
+    <div class="ord">Jul 2026 · Uniqlo</div></div></div><div class="card" data-brand="Uniqlo" data-cat="bottoms" data-name="Regular Chino Pants" data-color="Brown"><img loading="lazy" src="45-uniqlo-regchino-brown.jpg" alt="Uniqlo Regular Chino Pants"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Regular Chino Pants</div>
+    <div class="det">Brown · 79cm, hemmed to 70cm</div>
+    <div class="ord">Jul 2026 · Uniqlo</div></div></div><div class="card" data-brand="Uniqlo" data-cat="bottoms" data-name="Wide Tapered Pants" data-color="Brown"><img loading="lazy" src="54-uniqlo-widetapered-brown.jpg" alt="Uniqlo Wide Tapered Pants"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Wide Tapered Pants</div>
+    <div class="det">Brown · M, hemmed to 70cm</div>
+    <div class="ord">May 2026 · Uniqlo</div></div></div><div class="card" data-brand="Uniqlo" data-cat="bottoms" data-name="Extra Stretch DRY-EX Jogger Pants" data-color="Blue"><img loading="lazy" src="34-uniqlo-dryex-blue.jpg" alt="Uniqlo Extra Stretch DRY-EX Jogger Pants"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Extra Stretch DRY-EX Jogger Pants</div>
+    <div class="det">Blue · M</div>
+    <div class="ord">Apr 2026 · Uniqlo</div></div></div><div class="card" data-brand="Uniqlo" data-cat="bottoms" data-name="Linen Blend Easy Pants" data-color="Navy"><img loading="lazy" src="41-uniqlo-lineneasy-69.jpg" alt="Uniqlo Linen Blend Easy Pants"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Linen Blend Easy Pants</div>
+    <div class="det">Navy · Not on receipt</div>
+    <div class="ord">Apr 2026 · Uniqlo in-store · Orion Mall, Bengaluru</div><div class="note">Color confirmed by you. Size not on e-receipt</div></div></div><div class="card" data-brand="Uniqlo" data-cat="bottoms" data-name="Linen Blend Easy Pants (Striped)" data-color="Beige stripe"><img loading="lazy" src="42-uniqlo-linenstripe-31.jpg" alt="Uniqlo Linen Blend Easy Pants (Striped)"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Linen Blend Easy Pants (Striped)</div>
+    <div class="det">Beige stripe · Not on receipt</div>
+    <div class="ord">Apr 2026 · Uniqlo in-store · Orion Mall, Bengaluru</div><div class="note">Color confirmed by you. Size not on e-receipt</div></div></div><div class="card" data-brand="Uniqlo" data-cat="bottoms" data-name="Stretch Easy Ankle Pants x2" data-color="Olive + beige"><img loading="lazy" src="49-uniqlo-stretchankle-57.jpg" alt="Uniqlo Stretch Easy Ankle Pants x2"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Stretch Easy Ankle Pants x2</div>
+    <div class="det">Olive + beige · Not on receipt</div>
+    <div class="ord">Apr 2026 · Uniqlo in-store · Orion Mall, Bengaluru</div><div class="note">Colors confirmed by you; photo shows the olive. Size not on e-receipt</div></div></div><div class="card" data-brand="Uniqlo" data-cat="bottoms" data-name="Jersey Easy Cargo Pants" data-color="Black"><img loading="lazy" src="39-uniqlo-jerseycargo-09.jpg" alt="Uniqlo Jersey Easy Cargo Pants"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Jersey Easy Cargo Pants</div>
+    <div class="det">Black · Not on receipt</div>
+    <div class="ord">Apr 2026 · Uniqlo in-store · Orion Mall, Bengaluru</div><div class="note">Color confirmed by you. Size not on e-receipt</div></div></div><div class="card" data-brand="Uniqlo" data-cat="bottoms" data-name="Jersey Easy Pants x2" data-color="Olive + beige"><img loading="lazy" src="40-uniqlo-jerseyeasywork-57.jpg" alt="Uniqlo Jersey Easy Pants x2"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Jersey Easy Pants x2</div>
+    <div class="det">Olive + beige · Not on receipt</div>
+    <div class="ord">Apr 2026 · Uniqlo in-store · Orion Mall, Bengaluru</div><div class="note">Colors confirmed by you; photo shows the olive. Size not on e-receipt</div></div></div><div class="card" data-brand="Uniqlo" data-cat="bottoms" data-name="Geared Pants" data-color="Olive"><img loading="lazy" src="36-uniqlo-geared-56.jpg" alt="Uniqlo Geared Pants"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Geared Pants</div>
+    <div class="det">Olive · Not on receipt</div>
+    <div class="ord">Apr 2026 · Uniqlo in-store · Orion Mall, Bengaluru</div><div class="note">Color confirmed by you. Size not on e-receipt</div></div></div><div class="card" data-brand="Uniqlo" data-cat="bottoms" data-name="Wide Straight Jeans x2" data-color="Blue (colorway 62)"><img loading="lazy" src="1-uniqlo-widestraight-blue.jpg" alt="Uniqlo Wide Straight Jeans x2"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Wide Straight Jeans x2</div>
+    <div class="det">Blue (colorway 62) · Not on receipt</div>
+    <div class="ord">Apr 2026 · Uniqlo in-store · Orion Mall, Bengaluru</div><div class="note">You confirmed blue (62). Both receipt pairs (styles 203606/203607) are the same Wide Straight family. Colorway 62 has no photo on the current site; photo shows the current listing&#x27;s blue (66). Size not on e-receipt</div></div></div><div class="card" data-brand="Monks of Method" data-cat="bottoms" data-name="Ontaké Mid-weight Japanese Selvedge" data-color="Raw Indigo"><img loading="lazy" src="7-monks-ontake-rawindigo.jpg" alt="Monks of Method Ontaké Mid-weight Japanese Selvedge"><div class="meta"><div class="brand">Monks of Method</div>
+    <div class="nm">Ontaké Mid-weight Japanese Selvedge</div>
+    <div class="det">Raw Indigo · Not on record</div>
+    <div class="ord">Added Sep 2026 · No order email found</div><div class="note">Added from your message. No purchase email found; official Monks of Method photo. Size not on record</div></div></div><div class="card" data-brand="March Tee" data-cat="bottoms" data-name="Denims" data-color="Classic Wash"><img loading="lazy" src="9-march-denims-classicwash.jpg" alt="March Tee Denims"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Denims</div>
+    <div class="det">Classic Wash · W32/L29</div>
+    <div class="ord">May 2026 · March Tee #AVY68Q</div></div></div><div class="card" data-brand="March Tee" data-cat="bottoms" data-name="Hammo Shorts" data-color="Tan"><img loading="lazy" src="19-march-hammoshorts-tan.jpg" alt="March Tee Hammo Shorts"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Hammo Shorts</div>
+    <div class="det">Tan · S</div>
+    <div class="ord">Mar 2026 · March Tee #LW7GQL</div></div></div><div class="card" data-brand="March Tee" data-cat="bottoms" data-name="Hammo Shorts" data-color="Midnight Navy"><img loading="lazy" src="18-march-hammoshorts-navy.jpg" alt="March Tee Hammo Shorts"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Hammo Shorts</div>
+    <div class="det">Midnight Navy · S</div>
+    <div class="ord">Mar 2026 · March Tee #LW7GQL</div><div class="note">Photo shows the archived Navy colorway</div></div></div><div class="card" data-brand="March Tee" data-cat="bottoms" data-name="Hammo Pants" data-color="Midnight Navy"><img loading="lazy" src="16-march-hammopants-navy.jpg" alt="March Tee Hammo Pants"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Hammo Pants</div>
+    <div class="det">Midnight Navy · M</div>
+    <div class="ord">Mar 2026 · March Tee #LW7GQL</div><div class="note">Official photo shows Hammo Pants in Classic Black; Midnight Navy is discontinued</div></div></div><div class="card" data-brand="March Tee" data-cat="bottoms" data-name="Hammo Pants" data-color="Coffee Brown"><img loading="lazy" src="15-march-hammopants-coffee.jpg" alt="March Tee Hammo Pants"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Hammo Pants</div>
+    <div class="det">Coffee Brown · M</div>
+    <div class="ord">Mar 2026 · March Tee #LW7GQL</div><div class="note">Official photo shows Hammo Pants in Classic Black; Coffee Brown is discontinued</div></div></div><div class="card" data-brand="March Tee" data-cat="bottoms" data-name="Hammo Shorts" data-color="Theory Olive"><div class="ph">No confident photo</div><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Hammo Shorts</div>
+    <div class="det">Theory Olive · M</div>
+    <div class="ord">Mar 2024 · March Tee #V9B3ZX</div><div class="note">2024 colorway discontinued; no official photo found</div></div></div><div class="card" data-brand="March Tee" data-cat="bottoms" data-name="Hammo Shorts" data-color="Classic Black"><img loading="lazy" src="17-march-hammoshorts-black.jpg" alt="March Tee Hammo Shorts"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Hammo Shorts</div>
+    <div class="det">Classic Black · M</div>
+    <div class="ord">Mar 2024 · March Tee #V9B3ZX</div><div class="note">Photo shows the archived Black colorway</div></div></div></div><h2 id="innerwear">Innerwear <span class="count">4</span></h2><div class="grid"><div class="card" data-brand="Wellbi" data-cat="innerwear" data-name="Airlite Bamboo Trunk x2" data-color="Olive + Vintage"><img loading="lazy" src="57-wellbi-airlite-pack.png" alt="Wellbi Airlite Bamboo Trunk x2"><div class="meta"><div class="brand">Wellbi</div>
+    <div class="nm">Airlite Bamboo Trunk x2</div>
+    <div class="det">Olive + Vintage · M</div>
+    <div class="ord">Feb 2026 · Wellbi #56146</div><div class="note">Photo shows Wellbi&#x27;s current Airlite pack; Olive and Vintage colorways are discontinued</div></div></div><div class="card" data-brand="Wellbi" data-cat="innerwear" data-name="Bamboo Active Trunks x4" data-color="Colors not shown on order"><img loading="lazy" src="56-wellbi-activetrunks-pack.png" alt="Wellbi Bamboo Active Trunks x4"><div class="meta"><div class="brand">Wellbi</div>
+    <div class="nm">Bamboo Active Trunks x4</div>
+    <div class="det">Colors not shown on order · M</div>
+    <div class="ord">Aug 2026 · Wellbi #73625</div><div class="note">Photo shows Wellbi&#x27;s current Active Trunks pack</div></div></div><div class="card" data-brand="March Tee" data-cat="innerwear" data-name="Suvin Boxers (Pack of 2)" data-color="Juniper Checks + Pearl Blue"><img loading="lazy" src="2-march-boxers-juniper.jpg" alt="March Tee Suvin Boxers (Pack of 2)"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Suvin Boxers (Pack of 2)</div>
+    <div class="det">Juniper Checks + Pearl Blue · M</div>
+    <div class="ord">Mar 2025 · March Tee #MQVE9E</div><div class="note">Photo shows Juniper Checks; the pack also includes Pearl Blue</div></div></div><div class="card" data-brand="March Tee" data-cat="innerwear" data-name="Supima Trunks" data-color="Nautica"><img loading="lazy" src="29-march-trunks-nautica.jpg" alt="March Tee Supima Trunks"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Supima Trunks</div>
+    <div class="det">Nautica · M</div>
+    <div class="ord">Mar 2025 · March Tee #MQVE9E</div><div class="note">Official photo shows the same trunks in Classic Black</div></div></div></div><h2 id="outerwear">Outerwear & Knitwear <span class="count">4</span></h2><div class="grid"><div class="card" data-brand="Uniqlo" data-cat="outerwear" data-name="Sweat Half-Zip Pullover" data-color="Black"><img loading="lazy" src="37-uniqlo-halfzip-black.jpg" alt="Uniqlo Sweat Half-Zip Pullover"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Sweat Half-Zip Pullover</div>
+    <div class="det">Black · M</div>
+    <div class="ord">Apr 2026 · Uniqlo</div></div></div><div class="card" data-brand="Uniqlo" data-cat="outerwear" data-name="Knitted V Neck Cardigan" data-color="Dark Brown"><img loading="lazy" src="31-uniqlo-cardigan-darkbrown.jpg" alt="Uniqlo Knitted V Neck Cardigan"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Knitted V Neck Cardigan</div>
+    <div class="det">Dark Brown · M</div>
+    <div class="ord">Apr 2026 · Uniqlo</div></div></div><div class="card" data-brand="Uniqlo" data-cat="outerwear" data-name="Zip Up Blouson" data-color="Beige"><img loading="lazy" src="55-uniqlo-zipblouson-32.jpg" alt="Uniqlo Zip Up Blouson"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Zip Up Blouson</div>
+    <div class="det">Beige · Not on receipt</div>
+    <div class="ord">Apr 2026 · Uniqlo in-store · Orion Mall, Bengaluru</div><div class="note">Color confirmed by you. Size not on e-receipt</div></div></div><div class="card" data-brand="Uniqlo" data-cat="outerwear" data-name="Utility Jacket" data-color="Black"><img loading="lazy" src="51-uniqlo-utility-09.jpg" alt="Uniqlo Utility Jacket"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Utility Jacket</div>
+    <div class="det">Black · Not on receipt</div>
+    <div class="ord">Apr 2026 · Uniqlo in-store · Orion Mall, Bengaluru</div><div class="note">Color confirmed by you. Size not on e-receipt</div></div></div></div><h2 id="shoes">Shoes <span class="count">6</span></h2><div class="grid"><div class="card" data-brand="Theater" data-cat="shoes" data-name="Combat" data-color="Mocha"><img loading="lazy" src="30-theater-combat-mocha.jpg" alt="Theater Combat"><div class="meta"><div class="brand">Theater</div>
+    <div class="nm">Combat</div>
+    <div class="det">Mocha · EU 42</div>
+    <div class="ord">Jul 2026 · Theater #707991</div></div></div><div class="card" data-brand="Happenstance" data-cat="shoes" data-name="Bodhi" data-color="Night Rider"><img loading="lazy" src="1-happenstance-bodhi.webp" alt="Happenstance Bodhi"><div class="meta"><div class="brand">Happenstance</div>
+    <div class="nm">Bodhi</div>
+    <div class="det">Night Rider · M8</div>
+    <div class="ord">May 2026 · Happenstance #2505447</div></div></div><div class="card" data-brand="New Balance" data-cat="shoes" data-name="Fresh Foam X 1080v13" data-color="Black/White"><img loading="lazy" src="1-nb-1080v13-blackwhite.jpg" alt="New Balance Fresh Foam X 1080v13"><div class="meta"><div class="brand">New Balance</div>
+    <div class="nm">Fresh Foam X 1080v13</div>
+    <div class="det">Black/White · UK 9</div>
+    <div class="ord">Jul 2024 · Amazon.in · Jul 2024</div><div class="note">Black/White colorway pinned from the link you sent. Size per you (UK 9); the returned 2024 Amazon unit was UK 8.5, same model</div></div></div><div class="card" data-brand="New Balance" data-cat="shoes" data-name="574" data-color="Black"><img loading="lazy" src="4-nb-574-black.jpg" alt="New Balance 574"><div class="meta"><div class="brand">New Balance</div>
+    <div class="nm">574</div>
+    <div class="det">Black · UK 9</div>
+    <div class="ord">Added Sep 2026 · No order email found</div><div class="note">Added from your list. No purchase email found; photo is the core black 574 (ML574EVB). Size per you</div></div></div><div class="card" data-brand="Adidas" data-cat="shoes" data-name="NY 90" data-color="White"><img loading="lazy" src="10-adidas-ny90-white.jpg" alt="Adidas NY 90"><div class="meta"><div class="brand">Adidas</div>
+    <div class="nm">NY 90</div>
+    <div class="det">White · 8</div>
+    <div class="ord">Nov 2022 · AJIO · Nov 2022</div><div class="note">Official adidas photo (White, FX6473). Model matches the pair you linked from The Collective (590950); your order history shows NY 90 white size 8 from AJIO, Nov 2022</div></div></div><div class="card" data-brand="Birkenstock" data-cat="shoes" data-name="Mayari" data-color="Black"><img loading="lazy" src="6-birkenstock-mayari-black.jpg" alt="Birkenstock Mayari"><div class="meta"><div class="brand">Birkenstock</div>
+    <div class="nm">Mayari</div>
+    <div class="det">Black · Not on record</div>
+    <div class="ord">Added Sep 2026 · No order email found</div><div class="note">Black Birko-Flor confirmed via the Myntra link you sent. Size not on record</div></div></div></div><h2 id="accessories">Accessories <span class="count">4</span></h2><div class="grid"><div class="card" data-brand="Uniqlo" data-cat="accessories" data-name="Round Mini Shoulder Bag" data-color="Dark Green"><img loading="lazy" src="43-uniqlo-minibag-darkgreen.jpg" alt="Uniqlo Round Mini Shoulder Bag"><div class="meta"><div class="brand">Uniqlo</div>
+    <div class="nm">Round Mini Shoulder Bag</div>
+    <div class="det">Dark Green · One size</div>
+    <div class="ord">May 2026 · Uniqlo</div></div></div><div class="card" data-brand="March Tee" data-cat="accessories" data-name="Large Tote" data-color="Charcoal"><img loading="lazy" src="28-march-tote.jpg" alt="March Tee Large Tote"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Large Tote</div>
+    <div class="det">Charcoal · One size</div>
+    <div class="ord">May 2026 · March Tee #AVY68Q</div></div></div><div class="card" data-brand="March Tee" data-cat="accessories" data-name="Essential Socks x3" data-color="Oatmeal + Heather Grey + Denim Blue"><img loading="lazy" src="27-march-socks.jpg" alt="March Tee Essential Socks x3"><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Essential Socks x3</div>
+    <div class="det">Oatmeal + Heather Grey + Denim Blue · One size</div>
+    <div class="ord">Mar 2024 · March Tee #V9B3ZX</div><div class="note">Photo shows the socks in White</div></div></div><div class="card" data-brand="March Tee" data-cat="accessories" data-name="Apron" data-color="Indigo Denim"><div class="ph">No confident photo</div><div class="meta"><div class="brand">March Tee</div>
+    <div class="nm">Apron</div>
+    <div class="det">Indigo Denim · One size</div>
+    <div class="ord">Mar 2026 · March Tee #LW7GQL</div><div class="note">Discontinued; no official photo found</div></div></div></div>
+<h2 id="verify">Needs verification <span class="count">1</span></h2>
+<div class="ugrid"><div class="ucard"><div class="nm">Supima Cotton Wide Ribbed Socks</div><div class="det">Uniqlo · Black (91) · 25-27cm</div><div class="ord">Oct 2024 · Uniqlo</div><div class="note">No clean product photo</div></div></div>
+<h2 id="legacy">2022-23 archive (AJIO) <span class="count">19</span></h2>
+<div class="sub" style="margin-bottom:12px">Older purchases, extracted from delivery emails. Some may no longer be in rotation; product pages are gone, so no photos.</div>
+<ul class="leg"><li>Venture Runner Low-Top Running Shoes - Black - size 10 (AJIO, Feb 2023)</li><li>adidas NY 90 Low-Top Casual Shoes - White - size 8 (AJIO, Nov 2022)</li><li>Clarkin Low-Top Lace-Up Shoes - Off White - size 8 (AJIO, Apr 2022)</li><li>Striped Crew-Neck T-shirt - Red - M (AJIO, 2022)</li><li>Crew-Neck Cotton T-shirt - Royal Blue - M (AJIO, 2022)</li><li>Heathered Crew-Neck T-shirt (long sleeve) - Grey Melange - M (AJIO, 2022)</li><li>Striped Shirt with Mandarin Collar - Navy - 42 (AJIO, 2022)</li><li>Slim Fit Shirt with Patch Pocket - Green - M (AJIO, 2022)</li><li>Ikat Print Slim Fit Shirt - Blue - M (AJIO, 2022)</li><li>Checked Slim Fit Shirt with Button-Down Collar - Red - M (AJIO, 2022)</li><li>Checked Slim Fit Shirt with Patch Pocket - Yellow - M (AJIO, 2022)</li><li>Slim Fit Shirt with Band Collar - M (AJIO, 2022)</li><li>Checked Shirt with Patch Pocket - M (AJIO, 2022)</li><li>Slim Fit Flat-Front Joggers - Olive Green - 32 (AJIO, 2022)</li><li>Joggers with Zip Pockets - M (AJIO, 2022)</li><li>Knitted Joggers with Clip Buckle - M (AJIO, 2022)</li><li>Mid-Wash Slim Fit Jeans - Blue - 32 (AJIO, 2022)</li><li>Heathered Cardigan with Patch Pockets - Grey - M (AJIO, 2022)</li><li>Drawstring Bag - Black (AJIO, 2022)</li></ul>
+</div>
+<script>
+const ITEMS = [{"name": "Bamboo Active Performance T-Shirt", "brand": "Wellbi", "color": "Frost (light blue)", "cat": "tops", "img": "63-wellbi-performance-frost.png"}, {"name": "Bamboo Active Performance T-Shirt", "brand": "Wellbi", "color": "Red", "cat": "tops", "img": "64-wellbi-performance-red.png"}, {"name": "Bamboo Active Performance T-Shirt", "brand": "Wellbi", "color": "Dark Blue", "cat": "tops", "img": "62-wellbi-performance-darkblue.png"}, {"name": "Bamboo Heavy Crew Neck T-Shirt", "brand": "Wellbi", "color": "White", "cat": "tops", "img": "58-wellbi-heavycrew-white.png"}, {"name": "Bamboo Core Oversized T-Shirt", "brand": "Wellbi", "color": "Dark Brown", "cat": "tops", "img": "60-wellbi-oversized-darkbrown.jpg"}, {"name": "Bamboo Core Oversized T-Shirt", "brand": "Wellbi", "color": "Black", "cat": "tops", "img": "59-wellbi-oversized-black.jpg"}, {"name": "Bamboo Core Oversized T-Shirt", "brand": "Wellbi", "color": "Pinecrest (deep green)", "cat": "tops", "img": "61-wellbi-oversized-deepgreen.png"}, {"name": "Bamboo Core Polo", "brand": "Wellbi", "color": "Onyx (black)", "cat": "tops", "img": "65-wellbi-polo-black.jpg"}, {"name": "Bamboo Core Polo", "brand": "Wellbi", "color": "Mulberry", "cat": "tops", "img": "66-wellbi-polo-maroon.jpg"}, {"name": "Waffle Henley Neck Long Sleeve T-Shirt", "brand": "Uniqlo", "color": "Dark Green", "cat": "tops", "img": "38-uniqlo-henley-darkgreen.jpg"}, {"name": "Waffle Crew Neck Long Sleeve T-Shirt", "brand": "Uniqlo", "color": "Natural", "cat": "tops", "img": "52-uniqlo-wafflecrew-natural.jpg"}, {"name": "Dry Pique Short Sleeve Polo Shirt", "brand": "Uniqlo", "color": "Navy", "cat": "tops", "img": "6-ig-drypique.jpg"}, {"name": "Soft Brushed Crew Neck Long Sleeve T-Shirt", "brand": "Uniqlo", "color": "Dark Brown", "cat": "tops", "img": "47-uniqlo-softbrushed-darkbrown.jpg"}, {"name": "Soft Knitted Fleece Crew Neck T", "brand": "Uniqlo", "color": "Wine", "cat": "tops", "img": "35-uniqlo-fleece-wine.jpg"}, {"name": "Crew Neck Long Sleeve Sweater", "brand": "Uniqlo", "color": "Natural", "cat": "tops", "img": "50-uniqlo-sweater-natural.jpg"}, {"name": "Souffle Yarn Half-Zip Sweater", "brand": "Uniqlo", "color": "Beige", "cat": "tops", "img": "48-uniqlo-souffle-beige.jpg"}, {"name": "Washable Knitted Shirt Short Sleeve", "brand": "Uniqlo", "color": "White", "cat": "tops", "img": "53-uniqlo-washableshirt-01.jpg"}, {"name": "Oxford Long Sleeve Shirt x3", "brand": "Uniqlo", "color": "Blue x2 (64, 66) + grey", "cat": "tops", "img": "44-uniqlo-oxford-64.jpg"}, {"name": "Jersey Over Shirt", "brand": "Uniqlo", "color": "Brown", "cat": "tops", "img": "1-uniqlo-overshirt-32.jpg"}, {"name": "Premium Linen Shirt Long Sleeve", "brand": "Uniqlo", "color": "Brown", "cat": "tops", "img": "2-uniqlo-linen-brown.jpg"}, {"name": "Premium Linen Shirt Long Sleeve", "brand": "Uniqlo", "color": "Blue", "cat": "tops", "img": "2-uniqlo-linen-blue.jpg"}, {"name": "Premium Linen Shirt Long Sleeve", "brand": "Uniqlo", "color": "Dark Brown", "cat": "tops", "img": "3-uniqlo-linen-darkbrown.jpg"}, {"name": "Premium Linen Shirt Long Sleeve", "brand": "Uniqlo", "color": "Off White", "cat": "tops", "img": "9-uniqlo-linen-offwhite.jpg"}, {"name": "Premium Linen Stand Collar Shirt Long Sleeve (Stripe)", "brand": "Uniqlo", "color": "Beige", "cat": "tops", "img": "4-uniqlo-linen-standcollar-54.jpg"}, {"name": "Boxy Shirt Short Sleeve", "brand": "Uniqlo", "color": "Natural", "cat": "tops", "img": "5-uniqlo-boxyshirt-30.jpg"}, {"name": "Wide Fit Chino Pants", "brand": "Uniqlo", "color": "Brown", "cat": "bottoms", "img": "33-uniqlo-chino-brown.jpg"}, {"name": "Wide Fit Chino Pants", "brand": "Uniqlo", "color": "Black", "cat": "bottoms", "img": "32-uniqlo-chino-black.jpg"}, {"name": "Regular Chino Pants", "brand": "Uniqlo", "color": "Olive", "cat": "bottoms", "img": "46-uniqlo-regchino-olive.jpg"}, {"name": "Regular Chino Pants", "brand": "Uniqlo", "color": "Brown", "cat": "bottoms", "img": "45-uniqlo-regchino-brown.jpg"}, {"name": "Wide Tapered Pants", "brand": "Uniqlo", "color": "Brown", "cat": "bottoms", "img": "54-uniqlo-widetapered-brown.jpg"}, {"name": "Extra Stretch DRY-EX Jogger Pants", "brand": "Uniqlo", "color": "Blue", "cat": "bottoms", "img": "34-uniqlo-dryex-blue.jpg"}, {"name": "Linen Blend Easy Pants", "brand": "Uniqlo", "color": "Navy", "cat": "bottoms", "img": "41-uniqlo-lineneasy-69.jpg"}, {"name": "Linen Blend Easy Pants (Striped)", "brand": "Uniqlo", "color": "Beige stripe", "cat": "bottoms", "img": "42-uniqlo-linenstripe-31.jpg"}, {"name": "Stretch Easy Ankle Pants x2", "brand": "Uniqlo", "color": "Olive + beige", "cat": "bottoms", "img": "49-uniqlo-stretchankle-57.jpg"}, {"name": "Jersey Easy Cargo Pants", "brand": "Uniqlo", "color": "Black", "cat": "bottoms", "img": "39-uniqlo-jerseycargo-09.jpg"}, {"name": "Jersey Easy Pants x2", "brand": "Uniqlo", "color": "Olive + beige", "cat": "bottoms", "img": "40-uniqlo-jerseyeasywork-57.jpg"}, {"name": "Geared Pants", "brand": "Uniqlo", "color": "Olive", "cat": "bottoms", "img": "36-uniqlo-geared-56.jpg"}, {"name": "Wide Straight Jeans x2", "brand": "Uniqlo", "color": "Blue (colorway 62)", "cat": "bottoms", "img": "1-uniqlo-widestraight-blue.jpg"}, {"name": "Airlite Bamboo Trunk x2", "brand": "Wellbi", "color": "Olive + Vintage", "cat": "innerwear", "img": "57-wellbi-airlite-pack.png"}, {"name": "Bamboo Active Trunks x4", "brand": "Wellbi", "color": "Colors not shown on order", "cat": "innerwear", "img": "56-wellbi-activetrunks-pack.png"}, {"name": "Sweat Half-Zip Pullover", "brand": "Uniqlo", "color": "Black", "cat": "outerwear", "img": "37-uniqlo-halfzip-black.jpg"}, {"name": "Knitted V Neck Cardigan", "brand": "Uniqlo", "color": "Dark Brown", "cat": "outerwear", "img": "31-uniqlo-cardigan-darkbrown.jpg"}, {"name": "Zip Up Blouson", "brand": "Uniqlo", "color": "Beige", "cat": "outerwear", "img": "55-uniqlo-zipblouson-32.jpg"}, {"name": "Utility Jacket", "brand": "Uniqlo", "color": "Black", "cat": "outerwear", "img": "51-uniqlo-utility-09.jpg"}, {"name": "Combat", "brand": "Theater", "color": "Mocha", "cat": "shoes", "img": "30-theater-combat-mocha.jpg"}, {"name": "Bodhi", "brand": "Happenstance", "color": "Night Rider", "cat": "shoes", "img": "1-happenstance-bodhi.webp"}, {"name": "Fresh Foam X 1080v13", "brand": "New Balance", "color": "Black/White", "cat": "shoes", "img": "1-nb-1080v13-blackwhite.jpg"}, {"name": "574", "brand": "New Balance", "color": "Black", "cat": "shoes", "img": "4-nb-574-black.jpg"}, {"name": "NY 90", "brand": "Adidas", "color": "White", "cat": "shoes", "img": "10-adidas-ny90-white.jpg"}, {"name": "Mayari", "brand": "Birkenstock", "color": "Black", "cat": "shoes", "img": "6-birkenstock-mayari-black.jpg"}, {"name": "Ontaké Mid-weight Japanese Selvedge", "brand": "Monks of Method", "color": "Raw Indigo", "cat": "bottoms", "img": "7-monks-ontake-rawindigo.jpg"}, {"name": "Round Mini Shoulder Bag", "brand": "Uniqlo", "color": "Dark Green", "cat": "accessories", "img": "43-uniqlo-minibag-darkgreen.jpg"}, {"name": "Classic Crew", "brand": "March Tee", "color": "Heather Grey", "cat": "tops", "img": "6-march-crew-heathergrey.jpg"}, {"name": "Knit Crew", "brand": "March Tee", "color": "Moss Green", "cat": "tops", "img": "23-march-knitcrew-moss.jpg"}, {"name": "Knit Crew", "brand": "March Tee", "color": "Heather Grey", "cat": "tops", "img": "22-march-knitcrew-heathergrey.jpg"}, {"name": "Classic Crew", "brand": "March Tee", "color": "Oxford Blue", "cat": "tops", "img": "7-march-crew-oxfordblue.jpg"}, {"name": "Classic Crew", "brand": "March Tee", "color": "Caramel Brown", "cat": "tops", "img": "5-march-crew-caramel.jpg"}, {"name": "Classic LS", "brand": "March Tee", "color": "Denim Blue", "cat": "tops", "img": "3-march-classicls-denimblue.jpg"}, {"name": "Heavy Crew", "brand": "March Tee", "color": "Bloom", "cat": "tops", "img": "20-march-heavy-bloom.jpg"}, {"name": "Heavy Crew", "brand": "March Tee", "color": "Pure White", "cat": "tops", "img": "21-march-heavy-white.jpg"}, {"name": "Polo LS", "brand": "March Tee", "color": "Theory Olive", "cat": "tops", "img": "26-march-polols.jpg"}, {"name": "Hammo Lite", "brand": "March Tee", "color": "Black Stripes", "cat": "tops", "img": "10-march-hammolite-blackstripes.jpg"}, {"name": "Hammo Lite", "brand": "March Tee", "color": "Pirate Navy", "cat": "tops", "img": "13-march-hammolite-piratenavy.jpg"}, {"name": "Hammo Lite", "brand": "March Tee", "color": "Carbon", "cat": "tops", "img": "12-march-hammolite-carbon.jpg"}, {"name": "Knit Polo", "brand": "March Tee", "color": "Olive Green", "cat": "tops", "img": "24-march-knitpolo-olive.jpg"}, {"name": "Hammo Lite", "brand": "March Tee", "color": "Rust", "cat": "tops", "img": "14-march-hammolite-rust.jpg"}, {"name": "Hammo Lite", "brand": "March Tee", "color": "Bone", "cat": "tops", "img": "11-march-hammolite-bone.jpg"}, {"name": "Supima Polo", "brand": "March Tee", "color": "Sea Blue", "cat": "tops", "img": ""}, {"name": "Supima Polo", "brand": "March Tee", "color": "Sergeant Maroon", "cat": "tops", "img": "25-march-polo-maroon.jpg"}, {"name": "Unitbasic", "brand": "March Tee", "color": "Olive", "cat": "tops", "img": ""}, {"name": "Unitbasic", "brand": "March Tee", "color": "Peach", "cat": "tops", "img": ""}, {"name": "Classic Crew", "brand": "March Tee", "color": "Sergeant Maroon", "cat": "tops", "img": "8-march-crew-sergeantmaroon.jpg"}, {"name": "Classic Crew", "brand": "March Tee", "color": "Classic Black", "cat": "tops", "img": "4-march-crew-black.jpg"}, {"name": "Unithd", "brand": "March Tee", "color": "Navy Stripes", "cat": "tops", "img": ""}, {"name": "Denims", "brand": "March Tee", "color": "Classic Wash", "cat": "bottoms", "img": "9-march-denims-classicwash.jpg"}, {"name": "Hammo Shorts", "brand": "March Tee", "color": "Tan", "cat": "bottoms", "img": "19-march-hammoshorts-tan.jpg"}, {"name": "Hammo Shorts", "brand": "March Tee", "color": "Midnight Navy", "cat": "bottoms", "img": "18-march-hammoshorts-navy.jpg"}, {"name": "Hammo Pants", "brand": "March Tee", "color": "Midnight Navy", "cat": "bottoms", "img": "16-march-hammopants-navy.jpg"}, {"name": "Hammo Pants", "brand": "March Tee", "color": "Coffee Brown", "cat": "bottoms", "img": "15-march-hammopants-coffee.jpg"}, {"name": "Hammo Shorts", "brand": "March Tee", "color": "Theory Olive", "cat": "bottoms", "img": ""}, {"name": "Hammo Shorts", "brand": "March Tee", "color": "Classic Black", "cat": "bottoms", "img": "17-march-hammoshorts-black.jpg"}, {"name": "Suvin Boxers (Pack of 2)", "brand": "March Tee", "color": "Juniper Checks + Pearl Blue", "cat": "innerwear", "img": "2-march-boxers-juniper.jpg"}, {"name": "Supima Trunks", "brand": "March Tee", "color": "Nautica", "cat": "innerwear", "img": "29-march-trunks-nautica.jpg"}, {"name": "Large Tote", "brand": "March Tee", "color": "Charcoal", "cat": "accessories", "img": "28-march-tote.jpg"}, {"name": "Essential Socks x3", "brand": "March Tee", "color": "Oatmeal + Heather Grey + Denim Blue", "cat": "accessories", "img": "27-march-socks.jpg"}, {"name": "Apron", "brand": "March Tee", "color": "Indigo Denim", "cat": "accessories", "img": ""}];
+const NEUTRALS = ["black","white","off white","grey","gray","beige","natural","brown","dark brown","navy","olive","frost","mocha","night rider","heather grey","oxford blue","denim blue","blue","khaki","caramel brown"];
+function isNeutral(c){ const s=(c||"").toLowerCase(); return NEUTRALS.some(n=>s.includes(n)); }
+let tray = [];
+function keyOf(i){ return i.brand+"|"+i.name+"|"+i.color; }
+function renderTray(){
+  const el=document.getElementById('tray');
+  if(!tray.length){ el.innerHTML='<div class="trayempty">Tray is empty. Pick an item from the catalog, or hit Suggest.</div>'; return; }
+  el.innerHTML = tray.map((i,idx)=>{
+    const im = i.img ? `<img src="${i.img}" alt="">` : `<div class="tph">No photo</div>`;
+    return `<div class="tcard">${im}<button class="tx" onclick="removeAt(${idx})">×</button><div class="tm"><b>${i.name}</b>${i.brand} · ${i.color}</div></div>`;
+  }).join('');
+}
+function removeAt(idx){ tray.splice(idx,1); syncSel(); renderTray(); }
+function clearTray(){ tray=[]; syncSel(); renderTray(); }
+function syncSel(){
+  document.querySelectorAll('.card').forEach(c=>{
+    const k=c.dataset.brand+"|"+c.dataset.name+"|"+c.dataset.color;
+    c.classList.toggle('sel', tray.some(i=>keyOf(i)===k));
+  });
+}
+function toggleCard(c){
+  const k=c.dataset.brand+"|"+c.dataset.name+"|"+c.dataset.color;
+  const ex=tray.findIndex(i=>keyOf(i)===k);
+  if(ex>=0){ tray.splice(ex,1); }
+  else {
+    const it=ITEMS.find(i=>keyOf(i)===k);
+    if(it) tray.push(it);
+  }
+  syncSel(); renderTray();
+}
+document.querySelectorAll('.card').forEach(c=>c.addEventListener('click',()=>toggleCard(c)));
+function score(item, picked){
+  let s = Math.random()*0.6;
+  if(isNeutral(item.color)) s += 2;
+  const pickedStatement = picked.filter(p=>!isNeutral(p.color));
+  if(!isNeutral(item.color) && pickedStatement.length>0) s -= 5;
+  const low=item.color.toLowerCase();
+  picked.forEach(p=>{
+    const pl=p.color.toLowerCase();
+    if((low.includes("blue")||low.includes("navy")) && pl.includes("black")) s -= 0.4;
+    if(low.includes("brown") && (pl.includes("brown")||pl.includes("beige")||pl.includes("natural")||pl.includes("olive"))) s += 0.8;
+    if(low.includes("olive") && (pl.includes("brown")||pl.includes("beige")||pl.includes("black"))) s += 0.6;
+  });
+  return s;
+}
+function pickFor(cat, picked, exclude){
+  const cands=ITEMS.filter(i=>i.cat===cat && !picked.some(p=>keyOf(p)===keyOf(i)) && !(exclude||[]).some(e=>keyOf(e)===keyOf(i)));
+  if(!cands.length) return null;
+  return cands.map(i=>[score(i,picked),i]).sort((a,b)=>b[0]-a[0])[0][1];
+}
+function completeOutfit(){
+  let out=[...tray];
+  const need=[];
+  if(!out.some(i=>i.cat==="tops")) need.push("tops");
+  if(!out.some(i=>i.cat==="bottoms")) need.push("bottoms");
+  if(!out.some(i=>i.cat==="shoes")) need.push("shoes");
+  need.forEach(c=>{ const p=pickFor(c,out); if(p) out.push(p); });
+  if(out.length>=3 && Math.random()<0.5){
+    const p=pickFor("outerwear",out); if(p) out.push(p);
+  }
+  tray=out; syncSel(); renderTray();
+}
+function surpriseOutfit(){ tray=[]; const t=pickFor("tops",[]); if(t)tray.push(t); const b=pickFor("bottoms",tray); if(b)tray.push(b); const s=pickFor("shoes",tray); if(s)tray.push(s); const o=pickFor("outerwear",tray); if(o&&Math.random()<0.6)tray.push(o); syncSel(); renderTray(); }
+const fstate={brand:"all",cat:"all"};
+function applyFilters(){
+  document.querySelectorAll('.card').forEach(c=>{
+    const ok=(fstate.brand==="all"||c.dataset.brand===fstate.brand)&&(fstate.cat==="all"||c.dataset.cat===fstate.cat);
+    c.style.display=ok?"":"none";
+  });
+  document.querySelectorAll('div.grid').forEach(g=>{
+    const any=[...g.querySelectorAll('.card')].some(c=>c.style.display!=="none");
+    g.style.display=any?"":"none";
+    const h=g.previousElementSibling; if(h&&h.tagName==='H2') h.style.display=any?"":"none";
+  });
+  const filtered=fstate.brand!=="all"||fstate.cat!=="all";
+  ['verify','legacy'].forEach(id=>{ const h=document.getElementById(id); if(h){ h.style.display=filtered?"none":""; let s=h.nextElementSibling; if(s) s.style.display=filtered?"none":""; if(id==='legacy'){ const sub=h.nextElementSibling; } } });
+}
+document.querySelectorAll('[data-fb]').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('[data-fb]').forEach(x=>x.classList.remove('on')); b.classList.add('on'); fstate.brand=b.dataset.fb; applyFilters();
+}));
+document.querySelectorAll('[data-fc]').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('[data-fc]').forEach(x=>x.classList.remove('on')); b.classList.add('on'); fstate.cat=b.dataset.fc; applyFilters();
+}));
+</script>
+</body></html>
